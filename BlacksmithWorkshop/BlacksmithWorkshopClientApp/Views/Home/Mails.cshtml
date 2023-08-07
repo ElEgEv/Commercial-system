@@ -1,0 +1,83 @@
+﻿@{
+	ViewData["Title"] = "Mails";
+}
+
+<div class="text-center">
+	<h1 class="display-4">Письма</h1>
+</div>
+<div class="text-center">
+	<table class="table">
+		<thead>
+			<tr>
+				<th>
+					Дата письма
+				</th>
+				<th>
+					Заголовок
+				</th>
+				<th>
+					Текст
+				</th>
+				<th>
+					Статус
+				</th>
+				<th>
+					Ответ
+				</th>
+			</tr>
+		</thead>
+		<tbody id="mails-table-body">
+		</tbody>
+	</table>
+	<ul class="pagination justify-content-center">
+		<li id="prev-page" class="page-item">
+			<a class="page-link" href="#" aria-label="Previous">
+				<span aria-hidden="true">&laquo;</span>
+				<span class="sr-only">Предыдущая</span>
+			</a>
+		</li>
+		<li class="page-item">
+			<a id="current-page" class="page-link"></a>
+		</li>
+		<li id="next-page" class="page-item">
+			<a class="page-link" href="#" aria-label="Next">
+				<span aria-hidden="true">&raquo;</span>
+				<span class="sr-only">Следующая</span>
+			</a>
+		</li>
+	</ul>
+</div>
+
+<script>
+	function onClicked(isNext) {
+		$.ajax({
+			method: "GET",
+			url: "/Home/SwitchPage",
+			data: { isNext: isNext },
+			success: function (result) {
+				if (result != null) {
+
+					if (result.item1 != null && result.item2 != null) {
+						$("#mails-table-body").html(result.item1);
+						$("#current-page").text(result.item2);
+					}
+
+					if (result.item3)
+						$("#prev-page").removeClass("page-item disabled");
+					else
+						$("#prev-page").addClass("page-item disabled");
+
+					if (result.item4)
+						$("#next-page").removeClass("page-item disabled");
+					else
+						$("#next-page").addClass("page-item disabled");
+				}
+			}
+		});
+	}
+
+	// Чтобы в первый раз загрузить данные и попасть на первую страницу
+	onClicked(true);
+	$("#prev-page").on('click', () => onClicked(false));
+	$("#next-page").on('click', () => onClicked(true));
+</script>

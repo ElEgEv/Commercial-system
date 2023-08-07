@@ -1,0 +1,90 @@
+﻿@{
+    ViewData["Title"] = "Update";
+}
+
+<div class="text-center">
+    <h2 class="display-4">Изменение магазина</h2>
+</div>
+<form method="post">
+    <div class="row">
+        <div class="col-4">Магазин:</div>
+        <div class="col-8">
+            <select id="shop" name="shop" class="form-control" asp-items="@(new SelectList(@ViewBag.Shops,"Id", "ShopName"))"></select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">Название магазина:</div>
+        <div class="col-8"><input type="text" name="name" id="name" /></div>
+    </div>
+    <div class="row">
+        <div class="col-4">Адрес магазина:</div>
+        <div class="col-8"><input type="text" name="address" id="address" /></div>
+    </div>
+    <div class="row">
+        <div class="col-4">Дата открытия:</div>
+        <div class="col-8"><input type="datetime-local" id="date" name="date" /></div>
+    </div>
+    <div class="row">
+        <div class="col-4">Вместимость магазина:</div>
+        <div class="col-8"><input type="text" id="count" name="count" /></div>
+    </div>
+    <div class="row">
+        <div class="col-8"></div>
+        <div class="col-4"><input type="submit" value="Изменить" class="btn btn-primary" /></div>
+    </div>
+</form>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Изделие
+            </th>
+            <th>
+                Количество
+            </th>
+        </tr>
+    </thead>
+    <tbody id="tablebody">
+    </tbody>
+</table>
+@section Scripts{
+    <script>
+        $('#shop').on('change', function () {
+            check();
+        });
+        function check() {
+            var shop = $('#shop').val();
+            if (shop) 
+            {
+                $.ajax({
+                    method: "POST",
+                    url: "/Home/GetManufactures",
+                    data: { shop: shop },
+                    success: function (result) {
+                        $('#name').val(result.item1.shopName);
+                        $('#address').val(result.item1.address);
+                        $('#date').val(result.item3);
+                        $('#count').val(result.item1.maxCountManufactures);
+                        document.getElementById("tablebody").innerHTML = result.item2;
+                    }
+                });
+            }
+            else
+            {
+                $.ajax({
+                    method: "POST",
+                    url: "/Home/GetManufactures",
+                    data: { shop: @ViewBag.Shops[0].Id},
+                    success: function (result) {
+                        $('#name').val(result.item1.shopName);
+                        $('#address').val(result.item1.address);
+                        $('#date').val(result.item3);
+                        $('#count').val(result.item1.maxCountManufactures);
+                        document.getElementById("tablebody").innerHTML = result.item2;
+                    }
+                });
+            };
+        }
+        check();
+    </script>
+}

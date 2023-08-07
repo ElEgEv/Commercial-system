@@ -1,0 +1,19 @@
+﻿@{
+	ViewData["Title"] = "Delete";
+}
+
+<div class="text-center">
+	<h2 class="display-4">Удаление магазина</h2>
+</div>
+<form method="post">
+	<div class="row">
+		<div class="col-4">Магазин:</div>
+		<div class="col-8">
+			<select id="shop" name="shop" class="form-control" asp-items="@(new SelectList(@ViewBag.Shops,"Id", "ShopName"))"></select>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-8"></div>
+		<div class="col-4"><input type="submit" value="Удалить" class="btn btn-primary" /></div>
+	</div>
+</form>
